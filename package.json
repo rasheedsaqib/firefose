@@ -1,0 +1,38 @@
+{
+  "name": "firefose",
+  "version": "1.0.0",
+  "description": "Firefose is a Firebase object modeling tool designed to work in an asynchronous environment.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx tsc -w"
+  },
+  "author": "rasheedsaqib",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-admin": "^11.0.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rasheedsaqib/firefose.git"
+  },
+  "keywords": [
+    "firebase",
+    "document",
+    "model",
+    "firefose",
+    "schema",
+    "database",
+    "data",
+    "odm",
+    "query",
+    "nosql",
+    "orm",
+    "db"
+  ],
+  "bugs": {
+    "url": "https://github.com/rasheedsaqib/firefose/issues"
+  },
+  "homepage": "https://github.com/rasheedsaqib/firefose#readme"
+}
