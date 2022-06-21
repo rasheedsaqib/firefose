@@ -78,7 +78,7 @@ export class Query {
         if (this.populates.length > 0) {
             for (let populate of this.populates) {
                 data = await Promise.all(data.map(async (dataRef: any) => {
-                    dataRef[populate.field] = Formatable.format(await admin.firestore().collection(populate.doc).doc(dataRef[populate.field]).get(), this.schema);
+                    dataRef[populate.field] = Formatable.format(await admin.firestore().collection(populate.doc).doc(dataRef[populate.field].id).get(), this.schema);
                     return dataRef;
                 }));
             }

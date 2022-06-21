@@ -1,6 +1,6 @@
 {
   "name": "firefose",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Firefose is a Firebase object modeling tool designed to work in an asynchronous environment.",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,9 @@
   "dependencies": {
     "firebase-admin": "^11.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rasheedsaqib/firefose.git"

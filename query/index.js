@@ -69,7 +69,7 @@ class Query {
             if (this.populates.length > 0) {
                 for (let populate of this.populates) {
                     data = yield Promise.all(data.map((dataRef) => __awaiter(this, void 0, void 0, function* () {
-                        dataRef[populate.field] = Formatable.format(yield admin.firestore().collection(populate.doc).doc(dataRef[populate.field]).get(), this.schema);
+                        dataRef[populate.field] = Formatable.format(yield admin.firestore().collection(populate.doc).doc(dataRef[populate.field].id).get(), this.schema);
                         return dataRef;
                     })));
                 }
