@@ -1,0 +1,26 @@
+{
+  "roots": [
+    "<rootDir>/src"
+  ],
+  "testEnvironment": "node",
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "<rootDir>/src/**/*.ts",
+    "!<rootDir>/src/index.ts"
+  ],
+  "coverageDirectory": "build/coverage",
+  "coverageThreshold": {
+    "global": {
+      "branches": 100,
+      "functions": 100,
+      "lines": 100,
+      "statements": 100
+    }
+  },
+  "clearMocks": true,
+  "restoreMocks": true,
+  "moduleNameMapper": {"^(.*)\\.js$": "$1"},
+  "transformIgnorePatterns": [
+    "/node_modules/(?!@trilogy-group).+\\.js$"
+  ]
+}
