@@ -22,11 +22,20 @@ jobs:
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
 
+      - name: removing dist folder
+        run: rm -rf dist
+
       - name: Analyze
         run: yarn analyze
 
+      - name: removing dist folder
+        run: rm -rf dist
+
       - name: Test
         run: yarn test
+
+      - name: removing dist folder
+        run: rm -rf dist
 
       - name: Build
         run: yarn build
