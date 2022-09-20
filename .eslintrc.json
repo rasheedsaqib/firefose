@@ -1,0 +1,49 @@
+{
+  "root": true,
+  "extends": [
+    "standard-with-typescript",
+    "plugin:sonarjs/recommended",
+    "plugin:jest/recommended",
+    "plugin:jest/style"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "sonarjs",
+    "jest"
+  ],
+  "rules": {
+    "@typescript-eslint/ban-types": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "consistent-return": "error",
+    "no-empty-function": "off",
+    "@typescript-eslint/no-empty-function": "error",
+    "no-func-assign": "error",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
+    "no-unused-labels": "error"
+  },
+  "overrides": [
+    // unit tests
+    {
+      "files": [
+        "**/*.spec.*",
+        "**/*.test.*"
+      ],
+      "rules": {
+        // unit tests need to create mocks easily, relax objectLiteralTypeAssertions
+        "@typescript-eslint/consistent-type-assertions": [
+          "error",
+          {
+            "assertionStyle": "as",
+            "objectLiteralTypeAssertions": "allow"
+          }
+        ]
+      }
+    }
+  ]
+}

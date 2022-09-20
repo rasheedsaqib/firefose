@@ -1,0 +1,12 @@
+# build artefacts
+dist/*
+coverage/*
+# data definition files
+**/*.d.ts
+# 3rd party libs
+/src/public/
+# custom definition files
+/src/types/
+# stryker artifacts
+backend/stryker-tmp/*
+backend/reports/*
