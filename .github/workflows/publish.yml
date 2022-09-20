@@ -7,8 +7,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: removing dist folder
-        run: rm -rf dist
       - uses: actions/setup-node@v1
         with:
           node-version: 14
