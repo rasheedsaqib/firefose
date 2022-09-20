@@ -17,6 +17,13 @@ describe('Model', () => {
 
   beforeEach(() => {
     if (admin.apps.length === 0) {
+
+      console.log({
+        project_id: process.env.PROJECT_ID,
+        private_key: process.env.PRIVATE_KEY,
+        client_email: process.env.CLIENT_EMAIL
+      }, process.env.PROJECT_ID)
+
       connect({
         project_id: process.env.PROJECT_ID,
         private_key: process.env.PRIVATE_KEY,
