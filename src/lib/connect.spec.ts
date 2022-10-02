@@ -1,14 +1,15 @@
 import connect from './connect'
 import admin from 'firebase-admin'
 import dotenv from 'dotenv'
+
 dotenv.config()
 
 describe('initialize', () => {
   it('should initialize firebase', () => {
     const serviceAccount = {
-      project_id: process.env.PROJECT_ID,
-      private_key: process.env.PRIVATE_KEY,
-      client_email: process.env.CLIENT_EMAIL
+      project_id: process.env.PROJECT_ID as string,
+      private_key: process.env.PRIVATE_KEY as string,
+      client_email: process.env.CLIENT_EMAIL as string
     }
 
     connect(serviceAccount)

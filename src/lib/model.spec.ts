@@ -5,6 +5,7 @@ import admin from 'firebase-admin'
 import connect from './connect'
 import dotenv from 'dotenv'
 import Query from './query'
+
 dotenv.config()
 
 describe('Model', () => {
@@ -18,9 +19,9 @@ describe('Model', () => {
   beforeEach(() => {
     if (admin.apps.length === 0) {
       connect({
-        project_id: process.env.PROJECT_ID,
-        private_key: process.env.PRIVATE_KEY,
-        client_email: process.env.CLIENT_EMAIL
+        project_id: process.env.PROJECT_ID as string,
+        private_key: process.env.PRIVATE_KEY as string,
+        client_email: process.env.CLIENT_EMAIL as string
       })
     }
   })
@@ -99,7 +100,11 @@ describe('Model', () => {
       }
     }))
 
-    await postModel.create({ title: 'Hello World', createdBy: 'test', savedAt: new Date() }, 'my-test-post')
+    await postModel.create({
+      title: 'Hello World',
+      createdBy: 'test',
+      savedAt: new Date()
+    }, 'my-test-post')
     const result = await postModel.findById('my-test-post')
 
     expect(result).toHaveProperty('id')
@@ -158,5 +163,25 @@ describe('Model', () => {
     expect(result[0]?.createdBy).toHaveProperty('id')
     // @ts-ignore
     expect(result[0]?.createdBy).toHaveProperty('name')
+  })
+
+  it('should use query to update documents', async () => {
+    const query = new Query()
+    query.where('name', '==', 'Adil')
+    const result = await model.update(query, { name: 'Adil' })
+
+    expect(result).toHaveLength(1)
+    expect(result[0]).toHaveProperty('id')
+    expect(result[0]).toHaveProperty('name')
+    // @ts-ignore
+    expect(result[0]?.name).toBe('Adil')
+  })
+
+  it('should use query to delete documents', async () => {
+    const query = new Query()
+    query.where('name', '==', 'Jack')
+    const result = await model.delete(query)
+
+    expect(result).toBeTruthy()
   })
 })
