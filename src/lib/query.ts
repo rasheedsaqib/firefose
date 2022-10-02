@@ -14,8 +14,8 @@ class Query {
     return this
   }
 
-  orderBy (field: string, type: 'asc' | 'desc'): Query {
-    this.orderField = { field, type }
+  orderBy (field: string, direction: 'asc' | 'desc'): Query {
+    this.orderField = { field, direction }
     return this
   }
 

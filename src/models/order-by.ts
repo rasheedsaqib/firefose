@@ -1,4 +1,4 @@
 export interface OrderBy {
   field: string
-  type: 'asc' | 'desc'
+  direction: 'asc' | 'desc'
 }

@@ -44,7 +44,7 @@ class Model <T> {
     }
 
     if (query.orderField !== undefined) {
-      firestoreQuery = firestoreQuery.orderBy(query.orderField.field, query.orderField?.type)
+      firestoreQuery = firestoreQuery.orderBy(query.orderField.field, query.orderField?.direction)
     }
 
     if (query.limitTo !== undefined) {
@@ -82,9 +82,50 @@ class Model <T> {
     return { id, ...validatedData }
   }
 
+  async update (query: Query, data: T): Promise<T[]> {
+    const validatedData: T = this.schema.validateForUpdating(data)
+
+    let firestoreQuery: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = admin.firestore().collection(this.collection)
+
+    if (query.conditions.length > 0) {
+      query.conditions.forEach(condition => {
+        firestoreQuery = firestoreQuery.where(condition.field, condition.operator, condition.value)
+      })
+    }
+
+    const dataToUpdate = (await firestoreQuery.get()).docs.map(doc => this.format(doc))
+
+    await Promise.all(dataToUpdate.map(async item => {
+      // @ts-expect-error
+      return await this.updateById(item.id, validatedData)
+    }))
+
+    return dataToUpdate
+  }
+
   async deleteById (id: string): Promise<string> {
     await admin.firestore().collection(this.collection).doc(id).delete()
     return id
+  }
+
+  async delete (query: Query): Promise<string[]> {
+    let fbQuery: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = admin.firestore().collection(this.collection)
+
+    if (query.conditions.length > 0) {
+      query.conditions.forEach(condition => {
+        fbQuery = fbQuery.where(condition.field, condition.operator, condition.value)
+      })
+    }
+
+    const dataToDelete = (await fbQuery.get()).docs.map(doc => this.format(doc))
+
+    await Promise.all(dataToDelete.map(async item => {
+      // @ts-expect-error
+      return await this.deleteById(item.id)
+    }))
+
+    // @ts-expect-error
+    return dataToDelete.map(item => item.id)
   }
 
   private format (doc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>): T {
