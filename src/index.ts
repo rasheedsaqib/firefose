@@ -3,7 +3,7 @@ import SchemaTypes from './schema-types'
 import Schema from './lib/schema'
 import Model from './lib/model'
 
-export default {
+export = {
   connect,
   SchemaTypes,
   Schema,
