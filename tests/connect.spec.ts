@@ -1,4 +1,4 @@
-import connect from './connect'
+import connect from '../src/lib/connect'
 import admin from 'firebase-admin'
 import dotenv from 'dotenv'
 

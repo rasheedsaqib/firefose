@@ -77,7 +77,7 @@ class Model <T> {
     const validatedData: T = this.schema.validateForUpdating(data)
 
     // @ts-expect-error
-    await admin.firestore().collection(this.collection).doc(id).update(validatedData)
+    await admin.firestore().collection(this.collection).doc(id).update(validatedData, {merge: true})
 
     return { id, ...validatedData }
   }

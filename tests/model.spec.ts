@@ -1,10 +1,10 @@
-import Model from './model'
-import Schema from './schema'
-import SchemaTypes from '../schema-types'
+import Model from '../src/lib/model'
+import Schema from '../src/lib/schema'
+import SchemaTypes from '../src/schema-types'
 import admin from 'firebase-admin'
-import connect from './connect'
+import connect from '../src/lib/connect'
 import dotenv from 'dotenv'
-import Query from './query'
+import Query from '../src/lib/query'
 
 dotenv.config()
 

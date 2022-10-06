@@ -14,7 +14,7 @@ export interface ISchema {
   }
 }
 
-class Schema <T> {
+class Schema<T> {
   readonly structure: ISchema
   readonly options: SchemaOptions
 
@@ -23,37 +23,13 @@ class Schema <T> {
     this.options = { ...DEFAULT_SCHEMA_OPTIONS, ...options }
   }
 
-  validateForSaving (data: T): T {
-    const output: T = this.validateData(data)
-
-    if (this.options.timestamps === true) {
-      // @ts-expect-error
-      output.createdAt = new Date()
-      // @ts-expect-error
-      output.updatedAt = new Date()
-    }
-
-    return output
-  }
-
-  validateForUpdating (data: T): T {
-    const output: T = this.validateData(data)
-
-    if (this.options.timestamps === true) {
-      // @ts-expect-error
-      output.updatedAt = new Date()
-    }
-
-    return output
-  }
-
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  private validateData (data: T): T {
+  validateForSaving (data: T): T {
+    const output: T = { ...data }
     if (typeof data !== 'object') {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
       throw new Error('Invalid data provided')
     }
-
-    const output: T = { ...data }
 
     Object.keys(output as object).concat(Object.keys(this.structure)).forEach((key: string) => {
       // remove keys that are not in the schema
@@ -129,6 +105,81 @@ class Schema <T> {
         throw new Error(`Invalid type for ${key}. Expected value should be a Date reference but a ${typeof output[key]} is provided.`)
       }
     })
+
+    if (this.options.timestamps === true) {
+      // @ts-expect-error
+      output.createdAt = new Date()
+      // @ts-expect-error
+      output.updatedAt = new Date()
+    }
+
+    return output
+  }
+
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  validateForUpdating (data: T): T {
+    const output: T = { ...data }
+
+    if (typeof data !== 'object') {
+      throw new Error('Invalid data provided')
+    }
+
+    Object.keys(output as object).concat(Object.keys(this.structure)).forEach((key: string) => {
+      // remove keys that are not in the schema
+      if (this.structure[key] === undefined) {
+        // @ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete output[key]
+        return
+      }
+
+      // check string type validity
+      // @ts-expect-error
+      if (this.structure[key].type === SchemaTypes.String && output !== undefined && output[key] !== undefined && typeof output[key] !== 'string') {
+        // @ts-expect-error
+        throw new Error(`Invalid type for ${key}. Expected value should be a string but a ${typeof output[key]} is provided.`)
+      }
+
+      // check boolean type validity
+      // @ts-expect-error
+      if (this.structure[key].type === SchemaTypes.Boolean && output !== undefined && output[key] !== undefined && typeof output[key] !== 'boolean') {
+        // @ts-expect-error
+        throw new Error(`Invalid type for ${key}. Expected value should be a boolean but a ${typeof output[key]} is provided.`)
+      }
+
+      // check number type validity
+      // @ts-expect-error
+      if (this.structure[key].type === SchemaTypes.Number && output !== undefined && output[key] !== undefined && typeof output[key] !== 'number') {
+        // @ts-expect-error
+        throw new Error(`Invalid type for ${key}. Expected value should be a number but a ${typeof output[key]} is provided.`)
+      }
+
+      // check array type validity
+      // @ts-expect-error
+      if (this.structure[key].type === SchemaTypes.Array && output !== undefined && output[key] !== undefined && !Array.isArray(output[key])) {
+        // @ts-expect-error
+        throw new Error(`Invalid type for ${key}. Expected value should be an array but a ${typeof output[key]} is provided.`)
+      }
+
+      // check object type validity
+      // @ts-expect-error
+      if (this.structure[key].type === SchemaTypes.Object && output !== undefined && output[key] !== undefined && typeof output[key] !== 'object') {
+        // @ts-expect-error
+        throw new Error(`Invalid type for ${key}. Expected value should be an object but a ${typeof output[key]} is provided.`)
+      }
+
+      // check date type validity
+      // @ts-expect-error
+      if (this.structure[key].type === SchemaTypes.Date && output !== undefined && output[key] !== undefined && !(output[key] instanceof Date)) {
+        // @ts-expect-error
+        throw new Error(`Invalid type for ${key}. Expected value should be a Date reference but a ${typeof output[key]} is provided.`)
+      }
+    })
+
+    if (this.options.timestamps === true) {
+      // @ts-expect-error
+      output.updatedAt = new Date()
+    }
 
     return output
   }

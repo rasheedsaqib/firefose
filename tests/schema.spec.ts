@@ -1,5 +1,5 @@
-import Schema, { ISchema } from './schema'
-import SchemaTypes from '../schema-types'
+import Schema, { ISchema } from '../src/lib/schema'
+import SchemaTypes from '../src/schema-types'
 
 describe('Schema', () => {
   it('should be able to create a schema', () => {
