@@ -5,10 +5,5 @@ coverage/*
 **/*.d.ts
 # test files
 **/*.spec.ts
-# 3rd party libs
-/src/public/
-# custom definition files
-/src/types/
-# stryker artifacts
-backend/stryker-tmp/*
-backend/reports/*
+
+vitest.config.ts

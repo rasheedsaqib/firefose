@@ -18,11 +18,9 @@ class Model <T> {
     let output: T
 
     if (doc !== undefined) {
-      // @ts-expect-error
-      output = (await admin.firestore().collection(this.collection).doc(doc).set(validatedData)) as T
+      output = (await admin.firestore().collection(this.collection).doc(doc).set(validatedData as admin.firestore.WithFieldValue<admin.firestore.DocumentData>)) as T
     } else {
-      // @ts-expect-error
-      output = (await admin.firestore().collection(this.collection).add(validatedData)) as T
+      output = (await admin.firestore().collection(this.collection).add(validatedData as admin.firestore.WithFieldValue<admin.firestore.DocumentData>)) as T
     }
     // @ts-expect-error
     return { id: doc ?? output.id, ...validatedData }

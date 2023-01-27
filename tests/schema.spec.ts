@@ -1,5 +1,6 @@
 import Schema, { ISchema } from '../src/lib/schema'
 import SchemaTypes from '../src/schema-types'
+import {describe, it, expect} from 'vitest'
 
 describe('Schema', () => {
   it('should be able to create a schema', () => {
@@ -98,7 +99,7 @@ describe('Schema', () => {
     expect(() => schema.validateForSaving({})).toThrow('name is required')
   })
 
-  it('should throw an error of invalid type of string', () => {
+  it('should throw an error of invalid type of string while saving', () => {
     const schema = new Schema({
       name: {
         type: SchemaTypes.String
@@ -107,7 +108,7 @@ describe('Schema', () => {
     expect(() => schema.validateForSaving({ name: 123 })).toThrow('Invalid type for name. Expected value should be a string but a number is provided.')
   })
 
-  it('should throw an error of invalid type of number', () => {
+  it('should throw an error of invalid type of number while saving', () => {
     const schema = new Schema({
       age: {
         type: SchemaTypes.Number
@@ -116,7 +117,7 @@ describe('Schema', () => {
     expect(() => schema.validateForSaving({ age: '12' })).toThrow('Invalid type for age. Expected value should be a number but a string is provided.')
   })
 
-  it('should throw an error of invalid type of boolean', () => {
+  it('should throw an error of invalid type of boolean while saving', () => {
     const schema = new Schema({
       isAdult: {
         type: SchemaTypes.Boolean
@@ -125,7 +126,7 @@ describe('Schema', () => {
     expect(() => schema.validateForSaving({ isAdult: 'true' })).toThrow('Invalid type for isAdult. Expected value should be a boolean but a string is provided.')
   })
 
-  it('should throw an error of invalid type of array', () => {
+  it('should throw an error of invalid type of array while saving', () => {
     const schema = new Schema({
       posts: {
         type: SchemaTypes.Array
@@ -134,7 +135,7 @@ describe('Schema', () => {
     expect(() => schema.validateForSaving({ posts: 'posts' })).toThrow('Invalid type for posts. Expected value should be an array but a string is provided.')
   })
 
-  it('should throw an error of invalid type of object', () => {
+  it('should throw an error of invalid type of object while saving', () => {
     const schema = new Schema({
       user: {
         type: SchemaTypes.Object
@@ -143,7 +144,7 @@ describe('Schema', () => {
     expect(() => schema.validateForSaving({ user: 'user' })).toThrow('Invalid type for user. Expected value should be an object but a string is provided.')
   })
 
-  it('should throw an error of invalid type of date', () => {
+  it('should throw an error of invalid type of date while saving', () => {
     const schema = new Schema({
       createdAt: {
         type: SchemaTypes.Date
@@ -206,5 +207,69 @@ describe('Schema', () => {
     expect(validatedData).toHaveProperty('name')
     expect(validatedData).not.toHaveProperty('createdAt')
     expect(validatedData).not.toHaveProperty('updatedAt')
+  })
+
+  it('should throw an error if invalid data is provided for updating', () => {
+    const schema = new Schema({
+      name: {
+        type: SchemaTypes.String
+      }
+    })
+
+    expect(() => schema.validateForUpdating('John')).toThrow('Invalid data provided')
+  })
+
+  it('should throw an error of invalid type of string while updating', () => {
+    const schema = new Schema({
+      name: {
+        type: SchemaTypes.String
+      }
+    })
+    expect(() => schema.validateForUpdating({ name: 123 })).toThrow('Invalid type for name. Expected value should be a string but a number is provided.')
+  })
+
+  it('should throw an error of invalid type of boolean while updating', () => {
+    const schema = new Schema({
+      isAdult: {
+        type: SchemaTypes.Boolean
+      }
+    })
+    expect(() => schema.validateForUpdating({ isAdult: 'true' })).toThrow('Invalid type for isAdult. Expected value should be a boolean but a string is provided.')
+  })
+
+  it('should throw an error of invalid type of number while updating', () => {
+    const schema = new Schema({
+      age: {
+        type: SchemaTypes.Number
+      }
+    })
+    expect(() => schema.validateForUpdating({ age: '12' })).toThrow('Invalid type for age. Expected value should be a number but a string is provided.')
+  })
+
+  it('should throw an error of invalid type of array while updating', () => {
+    const schema = new Schema({
+      posts: {
+        type: SchemaTypes.Array
+      }
+    })
+    expect(() => schema.validateForUpdating({ posts: 'posts' })).toThrow('Invalid type for posts. Expected value should be an array but a string is provided.')
+  })
+
+  it('should throw an error of invalid type of object while updating', () => {
+    const schema = new Schema({
+      user: {
+        type: SchemaTypes.Object
+      }
+    })
+    expect(() => schema.validateForUpdating({ user: 'user' })).toThrow('Invalid type for user. Expected value should be an object but a string is provided.')
+  })
+
+  it('should throw an error of invalid type of date while updating', () => {
+    const schema = new Schema({
+      createdAt: {
+        type: SchemaTypes.Date
+      }
+    })
+    expect(() => schema.validateForUpdating({ createdAt: '2019-01-01' })).toThrow('Invalid type for createdAt. Expected value should be a Date reference but a string is provided.')
   })
 })

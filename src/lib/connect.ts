@@ -1,4 +1,5 @@
 import admin, { ServiceAccount } from 'firebase-admin'
+import { App } from 'firebase-admin/lib/app'
 
 export interface IServiceAccount {
   project_id: string
@@ -13,8 +14,8 @@ export interface IServiceAccount {
   client_x509_cert_url?: string
 }
 
-const connect = (serviceAccount: IServiceAccount): void => {
-  admin.initializeApp({
+const connect = (serviceAccount: IServiceAccount): App => {
+  return admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
   })
 }

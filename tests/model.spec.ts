@@ -1,29 +1,180 @@
 import Model from '../src/lib/model'
 import Schema from '../src/lib/schema'
 import SchemaTypes from '../src/schema-types'
-import admin from 'firebase-admin'
-import connect from '../src/lib/connect'
-import dotenv from 'dotenv'
 import Query from '../src/lib/query'
+import { describe, it, expect, vi } from 'vitest'
 
-dotenv.config()
+vi.mock('firebase-admin', () => ({
+  default: {
+    firestore: () => ({
+      collection: () => ({
+        add: () => Promise.resolve({ id: 'test2' }),
+        doc: (id: string) => ({
+          set: () => Promise.resolve({ id: 'test' }),
+          get: () => {
+            if (id === 'test') {
+              return Promise.resolve({
+                id: 'test',
+                exists: true,
+                data: () => ({
+                  name: 'Jack',
+                  createdAt: {
+                    toDate: () => new Date()
+                  },
+                  updatedAt: {
+                    toDate: () => new Date()
+                  }
+                })
+              })
+            } else if (id === 'my-test-post') {
+              return Promise.resolve({
+                id: 'my-test-post',
+                exists: true,
+                data: () => ({
+                  title: 'My Test Post',
+                  createdBy: 'test',
+                  savedAt: {
+                    toDate: () => new Date()
+                  }
+                })
+              })
+            } else if (id === 'testCreated') {
+              return Promise.resolve({
+                id: 'testCreated',
+                exists: true,
+                data: () => ({
+                  name: 'name'
+                })
+              })
+            } else {
+              return Promise.resolve({
+                id: 'test3',
+                exists: false,
+                data: () => null
+              })
+            }
+          },
+          update: () => Promise.resolve({ id: 'test' }),
+          delete: () => Promise.resolve()
+        }),
+        where: (key: string) => ({
+          orderBy: () => ({
+            limit: () => ({
+              offset: () => ({
+                get: () => Promise.resolve({
+                  docs: [
+                    {
+                      id: 'test',
+                      exists: true,
+                      data: () => ({
+                        name: 'name'
+                      })
+                    }
+                  ]
+                })
+              })
+            })
+          }),
+          get: () => {
+            if (key === 'name') {
+              return Promise.resolve({
+                docs: [
+                  {
+                    id: 'test',
+                    exists: true,
+                    data: () => ({
+                      name: 'Name2'
+                    })
+                  }
+                ]
+              })
+            } else {
+              return Promise.resolve({
+                docs: [
+                  {
+                    id: 'post1',
+                    exists: true,
+                    data: () => ({
+                      title: 'title',
+                      createdBy: 'testCreated',
+                      savedAt: {
+                        toDate: () => new Date()
+                      }
+                    })
+                  }
+                ]
+              })
+            }
+          }
+        }),
+        limit: () => ({
+          get: () => Promise.resolve({
+            docs: [
+              {
+                id: 'test',
+                exists: true,
+                data: () => ({
+                  name: 'name'
+                })
+              },
+              {
+                id: 'test',
+                exists: true,
+                data: () => ({
+                  name: 'name'
+                })
+              }
+            ]
+          })
+        }),
+        get: () => Promise.resolve({
+          docs: [
+            {
+              id: 'test',
+              exists: true,
+              data: () => ({
+                name: 'NameUpdated'
+              })
+            },
+            {
+              id: 'test',
+              exists: true,
+              data: () => ({
+                name: 'NameUpdated'
+              })
+            }
+          ]
+        })
+      })
+    })
+  }
+}))
 
 describe('Model', () => {
-  const model = new Model('test', new Schema({
-    name: {
-      type: SchemaTypes.String,
-      required: true
-    }
-  }, { timestamps: true }))
+  let model: Model<any>
+  let postModel: Model<any>
 
   beforeEach(() => {
-    if (admin.apps.length === 0) {
-      connect({
-        project_id: process.env.PROJECT_ID as string,
-        private_key: process.env.PRIVATE_KEY as string,
-        client_email: process.env.CLIENT_EMAIL as string
-      })
-    }
+    model = new Model('test', new Schema({
+      name: {
+        type: SchemaTypes.String,
+        required: true
+      }
+    }, { timestamps: true }))
+    postModel = new Model('posts', new Schema({
+      title: {
+        type: SchemaTypes.String,
+        required: true
+      },
+      createdBy: {
+        type: SchemaTypes.ObjectId,
+        ref: 'test'
+      },
+      savedAt: {
+        type: SchemaTypes.Date,
+        required: true
+      }
+    }))
   })
 
   it('should create a model', function () {
@@ -44,9 +195,7 @@ describe('Model', () => {
     expect(result).toHaveProperty('updatedAt')
     expect(result).toHaveProperty('id')
     expect(result).toHaveProperty('name')
-    // @ts-expect-error
     expect(result.id).toBe('test')
-    // @ts-expect-error
     expect(result.name).toBe('Jack')
   })
 
@@ -57,7 +206,6 @@ describe('Model', () => {
     expect(result).toHaveProperty('name')
     expect(result).toHaveProperty('createdAt')
     expect(result).toHaveProperty('updatedAt')
-    // @ts-expect-error
     expect(result.id).toBe('test')
   })
 
@@ -66,9 +214,7 @@ describe('Model', () => {
 
     expect(result).toHaveProperty('id')
     expect(result).toHaveProperty('name')
-    // @ts-expect-error
     expect(result.id).toBe('test')
-    // @ts-expect-error
     expect(result.name).toBe('John')
   })
 
@@ -85,26 +231,6 @@ describe('Model', () => {
   })
 
   it('should test dates and references', async () => {
-    const postModel = new Model('posts', new Schema({
-      title: {
-        type: SchemaTypes.String,
-        required: true
-      },
-      createdBy: {
-        type: SchemaTypes.ObjectId,
-        ref: 'test'
-      },
-      savedAt: {
-        type: SchemaTypes.Date,
-        required: true
-      }
-    }))
-
-    await postModel.create({
-      title: 'Hello World',
-      createdBy: 'test',
-      savedAt: new Date()
-    }, 'my-test-post')
     const result = await postModel.findById('my-test-post')
 
     expect(result).toHaveProperty('id')
@@ -135,21 +261,6 @@ describe('Model', () => {
   })
 
   it('should use query to find documents with populate', async () => {
-    const postModel = new Model('posts', new Schema({
-      title: {
-        type: SchemaTypes.String,
-        required: true
-      },
-      createdBy: {
-        type: SchemaTypes.ObjectId,
-        ref: 'test'
-      },
-      savedAt: {
-        type: SchemaTypes.Date,
-        required: true
-      }
-    }))
-
     const query = new Query()
     query.where('title', '==', 'Hello World Test').populate('createdBy')
     const result = await postModel.find(query)
@@ -165,16 +276,34 @@ describe('Model', () => {
     expect(result[0]?.createdBy).toHaveProperty('name')
   })
 
+  it('should update all documents', async () => {
+    const query = new Query()
+    const result = await model.update(query, { name: 'Name2' })
+
+    expect(result).toHaveLength(2)
+    expect(result[0]).toHaveProperty('id')
+    expect(result[0]).toHaveProperty('name')
+    // @ts-ignore
+    expect(result[0]?.name).toBe('NameUpdated')
+  })
+
   it('should use query to update documents', async () => {
     const query = new Query()
-    query.where('name', '==', 'Adil')
-    const result = await model.update(query, { name: 'Adil' })
+    query.where('name', '==', 'Name1')
+    const result = await model.update(query, { name: 'Name2' })
 
     expect(result).toHaveLength(1)
     expect(result[0]).toHaveProperty('id')
     expect(result[0]).toHaveProperty('name')
     // @ts-ignore
-    expect(result[0]?.name).toBe('Adil')
+    expect(result[0]?.name).toBe('Name2')
+  })
+
+  it('should delete all documents', async () => {
+    const query = new Query()
+    const result = await model.delete(query)
+
+    expect(result).toHaveLength(2)
   })
 
   it('should use query to delete documents', async () => {
@@ -184,4 +313,5 @@ describe('Model', () => {
 
     expect(result).toBeTruthy()
   })
+
 })
