@@ -1,0 +1,15 @@
+name: 🚦 Commitlint
+on:
+  push:
+    branches:
+      - main
+jobs:
+  🕵️‍♀️ Check Commit Messages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v2
+      - name: 📦 Install Dependencies
+        run: yarn install
+      - name: 🧪 Run Commitlint
+        run: yarn commitlint ${{ github.event.before }}...${{ github.event.after }}

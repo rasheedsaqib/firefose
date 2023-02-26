@@ -1,0 +1,15 @@
+name: 🐛 Eslint Check
+on:
+  push:
+    branches:
+      - main
+jobs:
+  🕵️‍♀️ Check Code Quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v2
+      - name: 📦 Install Dependencies
+        run: yarn install
+      - name: 🧹 Run Eslint
+        run: yarn run analyze

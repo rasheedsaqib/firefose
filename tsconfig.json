@@ -1,0 +1,19 @@
+{
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "vitest.config.ts"
+  ],
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "rootDir": "./src",
+    "declaration": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "sourceMap": false
+  }
+}
