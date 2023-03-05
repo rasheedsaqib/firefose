@@ -14,7 +14,7 @@ module.exports = {
     rules: {
         '@typescript-eslint/ban-types': 'error',
         '@typescript-eslint/explicit-module-boundary-types': 'error',
-        '@typescript-eslint/no-explicit-any': 'error',
+        '@typescript-eslint/no-explicit-any': 'warn',
         'consistent-return': 'error',
         'no-empty-function': 'off',
         '@typescript-eslint/no-empty-function': 'error',
