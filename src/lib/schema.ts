@@ -1,6 +1,7 @@
 import SchemaStructure = namespace.SchemaStructure
 import SchemaOptions = namespace.SchemaOptions
 import FieldSchema = namespace.FieldSchema
+import InstanceMethods = namespace.InstanceMethods
 
 type Paths = Record<
   string,
@@ -71,6 +72,15 @@ class Schema<T, U, V, W, X> {
     }
 
     return paths
+  }
+
+  get options(): namespace.SchemaOptions<U, V, W, X> {
+    return this._options
+  }
+
+  get methods(): InstanceMethods<U> {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    return this._options.methods ?? ({} as InstanceMethods<U>)
   }
 }
 

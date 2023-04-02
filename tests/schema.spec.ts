@@ -1,5 +1,7 @@
 // import {describe, it, expect} from "vitest";
-// import Schema from "../src/lib/schema";
+import Schema from "../src/lib/schema";
+import Model from "../src/lib/model";
+
 //
 // describe("Schema", () => {
 //     it('given an empty structure, should throw error', () => {
@@ -114,3 +116,21 @@
 //         })
 //     })
 // })
+
+const schema = new Schema({
+    name: String,
+    age: Number,
+    address: {
+        street: String,
+        number: Number,
+    }
+}, {
+    methods: {
+        sayHello(): string {
+            return `Hello ${this.name}`
+        }
+    }
+})
+
+const model = new Model('user', schema)
+

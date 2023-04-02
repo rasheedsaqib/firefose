@@ -16,8 +16,8 @@
     "analyze": "yarn run analyze:lint && yarn run analyze:type",
     "lint:eslint": "eslint src --ext .ts --fix",
     "lint:prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "lint": "npm run lint:eslint && npm run lint:prettier",
-    "prepare": "husky install",
+    "lint": "yarn run lint:eslint && yarn run lint:prettier",
+    "prepare": "npx husky install",
     "postinstall": "yarn prepare"
   },
   "devDependencies": {

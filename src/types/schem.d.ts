@@ -67,6 +67,10 @@ declare module namespace {
    */
   export type InstanceMethod = (...arguments: unknown[]) => unknown
 
+  export type InstanceMethods<T> = {
+    [P in keyof T]: InstanceMethod
+  }
+
   /**
    * The static method
    *
@@ -101,9 +105,7 @@ declare module namespace {
    */
   export interface SchemaOptions<U, V, W, X> {
     timestamps?: boolean
-    methods?: {
-      [P in keyof U]: InstanceMethod
-    }
+    methods?: InstanceMethods<U>
     statics?: {
       [P in keyof V]: Static
     }
